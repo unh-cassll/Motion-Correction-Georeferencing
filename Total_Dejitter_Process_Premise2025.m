@@ -34,7 +34,7 @@ magnetic_north = -14.4;
 % 120 meter altitude
 frame_start = 1;
 frame_end = frame_start+89;
-
+frame_offset = 14699;
 
 mean_heading = mean(IMU_struc.heading(frame_start:frame_end));
 % pre-allocate
@@ -60,7 +60,7 @@ for frame_num = frame_start:frame_end
 end
 
 % Introduce Empirical Gain
-incidence_angle_vec = IMU_struc.pitch(frame_start:frame_end)+90;
+incidence_angle_vec = IMU_struc.pitch(frame_start+frame_offset:frame_end+frame_offset)+90;
 incidence_mean = mean(incidence_angle_vec);
 avg_DOLP = sum_DOLP/counter;
 mean_DOLP = mean(avg_DOLP,2);
@@ -99,15 +99,15 @@ for frame_num = frame_start:frame_end
 
     [aov_h,~] = get_aov(2048,2448,pixp_microns,focal_length);
 
-    pitch = IMU_struc.pitch(frame_num);
-    roll = IMU_struc.roll(frame_num);
-    heading = IMU_struc.heading(frame_num) -mean_heading;
+    pitch = IMU_struc.pitch(frame_num+frame_offset);
+    roll = IMU_struc.roll(frame_num+frame_offset);
+    heading = IMU_struc.heading(frame_num+frame_offset) -mean_heading;
     
-    [Sx_out,m_per_px(counter),frame_extrema_SN_WE] = rectifier_deluxe(Sx,aov_h,freeboard(frame_num),pitch,roll,heading);
+    [Sx_out,m_per_px(counter),frame_extrema_SN_WE] = rectifier_deluxe(Sx,aov_h,freeboard(frame_num+frame_offset),pitch,roll,heading);
 
     frame_extrema_SNWE(counter,:) = [frame_extrema_SN_WE(1,:) frame_extrema_SN_WE(2,:)];
 
-    [Sy_out,~,~] = rectifier_deluxe(Sy,aov_h,freeboard(frame_num),pitch,roll,heading);
+    [Sy_out,~,~] = rectifier_deluxe(Sy,aov_h,freeboard(frame_num+frame_offset),pitch,roll,heading);
 
     frame_struc_Sx_transformed(counter).Sx = single(Sx_out);
     frame_struc_Sy_transformed(counter).Sy = single(Sy_out);
