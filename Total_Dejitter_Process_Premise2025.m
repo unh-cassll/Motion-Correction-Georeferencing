@@ -11,7 +11,7 @@ IMU_Dtime = IMU_struc.DTime;
 flen_mm = focal_length;
 pixp_microns = 3.45;
 
-load('tidal_data_june2025.mat') 
+load('data/tidal_data_june_til27th2025.mat') 
 dtime_future.TimeZone = 'UTC';
 buoy_ellh = interp1(dtime_future,z,Alta_Dtime);
 alt_ellh_diff = Alta_data_struc.vehicle_gps_position.alt_ellipsoid - buoy_ellh;
